@@ -28,8 +28,24 @@ jobs:
         go mod vendor
         go build -mod=vendor ./cmd/shox
 
+    - name: Create tarball
+      id: package
+      shell: bash
+      run: |
+        tar cfz shox.tgz shox 
+        # Let subsequent steps know where to find the compressed package
+        echo "PKG_PATH=shox.tgz" >> $GITHUB_OUTPUT
+
     - name: Upload Go test results
       uses: actions/upload-artifact@v4
       with:
-        name: shox
-        path: shox
+        name: shox.tgz
+        path: shox.tgz
+
+    - name: Publish package
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          ${{ steps.package.outputs.PKG_PATH }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
