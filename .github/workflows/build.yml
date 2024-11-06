@@ -5,15 +5,15 @@ name: build
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-  release:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
 
@@ -36,16 +36,15 @@ jobs:
         tar cfz shox.tgz shox 
         echo "PKG_PATH=shox.tgz" >> $GITHUB_OUTPUT
         echo "BIN_PATH=shox" >> $GITHUB_OUTPUT
-
+        
     - name: Upload Go test results
       uses: actions/upload-artifact@v4
       with:
-        name: shox.tgz
-        path: shox.tgz
+        name: shox
+        path: shox
 
     - name: Publish package
-      uses: softprops/action-gh-release@v2
-      if: steps.is-release.outputs.IS_RELEASE
+      uses: softprops/action-gh-release@v1
       with:
         files: |
           ${{ steps.package.outputs.PKG_PATH }}
