@@ -40,7 +40,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: shox
+        name: shox.zip
         path: shox
 
     - name: Publish package
