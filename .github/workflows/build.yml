@@ -25,10 +25,10 @@ jobs:
     - name: Build
       shell: bash
       run: |
-        mod tidy
+        go mod tidy
         go mod vendor
         go build -mod=vendor ./cmd/shox
-
+        
     - name: Create tarball
       id: package
       shell: bash
@@ -40,7 +40,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: shox.zip
+        name: shox
         path: shox
 
     - name: Publish package
